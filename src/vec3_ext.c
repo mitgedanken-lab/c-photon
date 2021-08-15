@@ -1,16 +1,20 @@
 #include <photon.h>
 
+#define _vec3_dot(a, b) (a.x * b.x + a.y * b.y + a.z * b.z)
+
 vec3 vec3_reflect(vec3 v, vec3 n)
 {
-    return vec3_sub(v, vec3_mult(n, 2.0f * vec3_dot(v, n)));
+    float f = 2.0 * _vec3_dot(v, n);
+    vec3 ret = {v.x - n.x * f, v.y - n.y * f, v.z - n.z * f};
+    return ret;
 }
 
 bool vec3_refract(vec3 v, vec3 n, float nint, vec3* outRefracted)
 {
-    float dt = vec3_dot(v, n);
+    float dt = _vec3_dot(v, n);
     float discr = 1.0f - nint * nint * (1.0f - dt * dt);
-    if (discr > 0) {
-        vec3 tmp = vec3_mult(vec3_sub(v, vec3_mult(n, dt)), nint);
+    if (discr > 0.0) {
+        vec3 tmp = {(v.x - n.x * dt) * nint, (v.y - n.y * dt) * nint, (v.z - n.z * dt) * nint};
         *outRefracted = vec3_sub(tmp, vec3_mult(n, sqrtf(discr)));
         return true;
     }
