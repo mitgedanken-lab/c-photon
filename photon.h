@@ -63,6 +63,9 @@ bool rect_overlap_offset(Rect r1, Rect r2, vec2 offset);
  -> 3D <- 
 ********/
 
+vec3 vec3_reflect(vec3 v, vec3 n);
+bool vec3_refract(vec3 v, vec3 n, float nint, vec3* outRefracted);
+
 vec3 random_in_disk();
 vec3 random_in_sphere();
 
