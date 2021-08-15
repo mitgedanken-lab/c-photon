@@ -71,6 +71,7 @@ vec3 ray3D_at(const Ray3D* ray, float t);
 
 bool sphere_hit(const Sphere* sphere, const Ray3D* ray, Hit3D* outHit, float tMin, float tMax);
 bool tri3D_hit(const Tri3D* tri, const Ray3D* ray, Hit3D* outHit, float tMin, float tMax);
+vec3 tri3D_norm(const Tri3D* tri);
 
 #ifdef __cplusplus
 }

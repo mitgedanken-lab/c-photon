@@ -1,15 +1,10 @@
 #include <photon.h>
 
-vec3 tri3D_norm(Tri3D* restrict tri)
+vec3 tri3D_norm(const Tri3D* restrict tri)
 {
     vec3 e1 = vec3_sub(tri->b, tri->a);
     vec3 e2 = vec3_sub(tri->c, tri->a);
     return vec3_normal(vec3_cross(e1, e2)); 
-}
-
-void tri3D_normalize(Tri3D* tri)
-{
-    tri->n = tri3D_norm(tri); 
 }
 
 bool tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outHit, float tMin, float tMax)
