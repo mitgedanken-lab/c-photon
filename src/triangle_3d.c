@@ -1,6 +1,5 @@
 #include <photon.h>
 
-#define _absf(f) ((f) * ((f) >= 0.0) - (f) * ((f) < 0.0))
 #define _ray3D_at(ray, t) {ray->orig.x + ray->dir.x * t, ray->orig.y + ray->dir.y * t, ray->orig.z + ray->dir.z * t}
 
 vec3 tri3D_norm(const Tri3D* restrict tri)
@@ -35,17 +34,20 @@ bool tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outH
         vec3 C = _vec3_cross(e, v); 
         if (_vec3_dot(tri->n, C) < 0) return false; // P is on the right side 
     }
+
     {
         vec3 e = _vec3_sub(tri->c, tri->b);
         vec3 v = _vec3_sub(P, tri->b);
         vec3 C = _vec3_cross(e, v); 
         if (_vec3_dot(tri->n, C) < 0) return false; // P is on the right side 
     }
+
     {
         vec3 e = _vec3_sub(tri->a, tri->c);
         vec3 v = _vec3_sub(P, tri->c); 
         vec3 C = _vec3_cross(e, v);
         if (_vec3_dot(tri->n, C) < 0) return false; // P is on the right side; 
     }
+
     return true; // Hit!
 } 

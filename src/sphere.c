@@ -2,9 +2,9 @@
 
 bool sphere_hit(const Sphere* restrict sphere, const Ray3D* restrict ray, Hit3D* outHit, float tMin, float tMax)
 {
-    vec3 oc = vec3_sub(ray->orig, sphere->pos);
-    float b = vec3_dot(oc, ray->dir);
-    float c = vec3_dot(oc, oc) - sphere->radius * sphere->radius;
+    vec3 oc = _vec3_sub(ray->orig, sphere->pos);
+    float b = _vec3_dot(oc, ray->dir);
+    float c = _vec3_dot(oc, oc) - sphere->radius * sphere->radius;
     float discr = b * b - c;
     if (discr > 0.0f) {
         float discrSq = sqrtf(discr);

@@ -1,7 +1,5 @@
 #include <photon.h>
 
-#define _vec3_dot(a, b) (a.x * b.x + a.y * b.y + a.z * b.z)
-
 vec3 vec3_reflect(vec3 v, vec3 n)
 {
     float f = 2.0 * _vec3_dot(v, n);
