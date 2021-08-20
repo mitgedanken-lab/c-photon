@@ -15,10 +15,10 @@ vec3 tri3D_norm(const Tri3D* restrict tri)
     return ret;
 }
 
-bool _tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outHit, float tMin, float tMax)
+bool tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outHit, float tMin, float tMax)
 { 
     vec3 e1 = _vec3_sub(tri->b, tri->a);
-    vec3 e2 = _vec3_sub(tri->c, tri->a);
+    vec3 e2 = _vec3_sub(tri->c, tri->b);
     vec3 c = _vec3_cross(e1, e2);
     vec3 n = _vec3_normal(c);
 
@@ -59,33 +59,27 @@ bool _tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* out
 
 #define EPSILON 0.0000001
 
-// https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
 // Moller-Trumbore algorithm
 
 bool tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outHit, float tMin, float tMax)
 {
-    vec3 vertex0 = tri->a;
-    vec3 vertex1 = tri->b;  
-    vec3 vertex2 = tri->c;
-    float a, f, u, v;
-
-    vec3 edge1 = _vec3_sub(vertex1, vertex0);
-    vec3 edge2 = _vec3_sub(vertex2, vertex0);
-    vec3 c = _vec3_cross(edge1, edge2);
+    vec3 e1 = _vec3_sub(tri->b, tri->a);
+    vec3 e2 = _vec3_sub(tri->c, tri->a);
+    vec3 c = _vec3_cross(e1, e2);
     vec3 n = _vec3_normal(c);
 
-    vec3 h = _vec3_cross(ray->dir, edge2);
-    a = _vec3_dot(edge1, h);
+    vec3 h = _vec3_cross(ray->dir, e2);
+    float a = _vec3_dot(e1, h);
     if (a > -EPSILON && a < EPSILON) return false; // parallel
     
-    f = 1.0 / a;
-    vec3 s = _vec3_sub(ray->orig, vertex0);
-    u = f * _vec3_dot(s, h);
-    vec3 q = _vec3_cross(s, edge1);
-    v = f * _vec3_dot(ray->dir, q);
+    float f = 1.0 / a;
+    vec3 s = _vec3_sub(ray->orig, tri->a);
+    float u = f * _vec3_dot(s, h);
+    vec3 q = _vec3_cross(s, e1);
+    float v = f * _vec3_dot(ray->dir, q);
     if ((u < 0.0 ) | (u > 1.0) | (v < 0.0) | (u + v > 1.0)) return false;
 
-    float t = f * _vec3_dot(edge2, q);
+    float t = f * _vec3_dot(e2, q);
     if (t > EPSILON && t < tMax && t > tMin) {
         *outHit = hit3D_new(t, n);
         return true;
