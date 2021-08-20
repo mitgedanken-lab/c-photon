@@ -51,3 +51,40 @@ bool tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outH
 
     return true; // Hit!
 } 
+
+/*
+#define EPSILON 0.0000001
+
+//https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+Moller-Trumbore algorithm
+
+bool _tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outHit, float tMin, float tMax)
+{
+    vec3 vertex0 = tri->a;
+    vec3 vertex1 = tri->b;  
+    vec3 vertex2 = tri->c;
+    float a, f, u, v;
+
+    vec3 edge1 = _vec3_sub(vertex1, vertex0);
+    vec3 edge2 = _vec3_sub(vertex2, vertex0);
+    vec3 h = _vec3_cross(ray->dir, edge2);
+    a = _vec3_dot(edge1, h);
+    if (a > -EPSILON && a < EPSILON) return false; // parallel
+    
+    f = 1.0 / a;
+    vec3 s = _vec3_sub(ray->orig, vertex0);
+    u = f * _vec3_dot(s, h);
+    vec3 q = _vec3_cross(s, edge1);
+    v = f * _vec3_dot(ray->dir, q);
+    if ((u < 0.0 ) | (u > 1.0) | (v < 0.0) | (u + v > 1.0)) return false;
+
+    float t = f * _vec3_dot(edge2, q);
+    if (t > EPSILON) {
+        outHit->t = t;
+        outHit->pos = ray3D_at(ray, t);
+        outHit->normal = tri->n;
+        return true;
+    }
+    return false;
+}
+*/
