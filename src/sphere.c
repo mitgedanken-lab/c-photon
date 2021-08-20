@@ -1,5 +1,11 @@
 #include <photon.h>
 
+Sphere sphere_new(vec3 pos, float radius)
+{
+    Sphere sphere = {pos, radius};
+    return sphere;
+}
+
 bool sphere_hit(const Sphere* restrict sphere, const Ray3D* restrict ray, Hit3D* outHit, float tMin, float tMax)
 {
     vec3 oc = _vec3_sub(ray->orig, sphere->pos);
@@ -11,17 +17,15 @@ bool sphere_hit(const Sphere* restrict sphere, const Ray3D* restrict ray, Hit3D*
         
         float t = (-b - discrSq);
         if (t < tMax && t > tMin) {
-            outHit->pos = ray3D_at(ray, t);
-            outHit->normal = vec3_mult(vec3_sub(outHit->pos, sphere->pos), 1.0f / sphere->radius);
-            outHit->t = t;
+            vec3 p = _ray3D_at(ray, t);
+            *outHit = hit3D_new(t, vec3_mult(vec3_sub(p, sphere->pos), 1.0f / sphere->radius));
             return true;
         }
         
         t = (-b + discrSq);
         if (t < tMax && t > tMin) {
-            outHit->pos = ray3D_at(ray, t);
-            outHit->normal = vec3_mult(vec3_sub(outHit->pos, sphere->pos), 1.0f / sphere->radius);
-            outHit->t = t;
+            vec3 p = _ray3D_at(ray, t);
+            *outHit = hit3D_new(t, vec3_mult(vec3_sub(p, sphere->pos), 1.0f / sphere->radius));
             return true;
         }
     }

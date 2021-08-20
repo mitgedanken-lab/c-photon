@@ -31,9 +31,8 @@ typedef struct Ray3D {
 } Ray3D;
 
 typedef struct Hit3D {
-    vec3 pos;
-    vec3 normal;
     float t;
+    vec3 normal;
 } Hit3D;
 
 typedef struct Sphere {   
@@ -46,8 +45,10 @@ typedef struct Tri2D {
 } Tri2D;
 
 typedef struct Tri3D {
-    vec3 a, b, c, n;
+    vec3 a, b, c;
 } Tri3D;
+
+#define _ray3D_at(ray, t) {ray->orig.x + ray->dir.x * t, ray->orig.y + ray->dir.y * t, ray->orig.z + ray->dir.z * t}
 
 /********
  -> 2D <- 
@@ -69,12 +70,17 @@ bool vec3_refract(vec3 v, vec3 n, float nint, vec3* outRefracted);
 vec3 random_in_disk();
 vec3 random_in_sphere();
 
+Hit3D hit3D_new(float t, vec3 normal);
+
 Ray3D ray3D_new(vec3 orig, vec3 dir);
 vec3 ray3D_at(const Ray3D* ray, float t);
 
+Sphere sphere_new(vec3 pos, float radius);
 bool sphere_hit(const Sphere* sphere, const Ray3D* ray, Hit3D* outHit, float tMin, float tMax);
-bool tri3D_hit(const Tri3D* tri, const Ray3D* ray, Hit3D* outHit, float tMin, float tMax);
+
+Tri3D tri3D_new(vec3 a, vec3 b, vec3 c);
 vec3 tri3D_norm(const Tri3D* tri);
+bool tri3D_hit(const Tri3D* tri, const Ray3D* ray, Hit3D* outHit, float tMin, float tMax);
 
 #ifdef __cplusplus
 }
