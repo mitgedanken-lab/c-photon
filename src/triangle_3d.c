@@ -15,7 +15,7 @@ vec3 tri3D_norm(const Tri3D* restrict tri)
     return ret;
 }
 
-bool tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outHit, float tMin, float tMax)
+bool _tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outHit, float tMin, float tMax)
 { 
     vec3 e1 = _vec3_sub(tri->b, tri->a);
     vec3 e2 = _vec3_sub(tri->c, tri->b);
@@ -61,7 +61,7 @@ bool tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outH
 
 // Moller-Trumbore algorithm
 
-bool tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outHit, float tMin, float tMax)
+bool tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outHit)
 {
     vec3 e1 = _vec3_sub(tri->b, tri->a);
     vec3 e2 = _vec3_sub(tri->c, tri->a);
@@ -80,7 +80,7 @@ bool tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outH
     if ((u < 0.0 ) | (u > 1.0) | (v < 0.0) | (u + v > 1.0)) return false;
 
     float t = f * _vec3_dot(e2, q);
-    if (t > EPSILON && t < tMax && t > tMin) {
+    if (t > EPSILON) {
         *outHit = hit3D_new(t, n);
         return true;
     }
