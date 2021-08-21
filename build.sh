@@ -65,7 +65,7 @@ slib() {
 
 case "$1" in
     "-d")
-        dlib;;
+        build && dlib;;
     "-s")
         slib;;
     "-build")
