@@ -1,5 +1,7 @@
 #!/bin/bash
 
+src=src/*.c
+cc=gcc
 name=libphoton
 
 flags=(
@@ -30,20 +32,17 @@ fail_os() {
 }
 
 mac_dlib() {
-    gcc ${flags[*]} ${inc[*]} ${lib[*]} -dynamiclib src/*.c -o $name.dylib
+    $cc ${flags[*]} ${inc[*]} ${lib[*]} -dynamiclib $src -o $name.dylib &&\
     install_name_tool -id @executable_path/$name.dylib $name.dylib 
 }
 
 linux_dlib() {
-    gcc -shared ${flags[*]} ${inc[*]} ${lib[*]} -lm -fPIC src/*.c -o $name.so 
+    $cc -shared ${flags[*]} ${inc[*]} ${lib[*]} -lm -fPIC $src -o $name.so 
 }
 
 build() {
     mkdir lib/
-    pushd fract/
-    ./build.sh -s
-    popd
-    mv fract/libfract.a lib/libfract.a
+    pushd fract/ && ./build.sh -s && popd && mv fract/libfract.a lib/libfract.a
 }
 
 clean() {
@@ -61,21 +60,18 @@ dlib() {
 }
 
 slib() {
-    gcc ${flags[*]} ${inc[*]} -c src/*.c
-    ar -crv $name.a *.o
-    rm *.o
+    $cc ${flags[*]} ${inc[*]} -c $src && ar -crv $name.a *.o && rm *.o
 }
 
-if [[ $# < 1 ]]; then 
-    fail_op
-elif [[ "$1" == "-d" ]]; then
-    dlib
-elif [[ "$1" == "-s" ]]; then
-    slib
-elif [[ "$1" == "-build" ]]; then
-    build
-elif [[ "$1" == "-clean" ]]; then
-    clean
-else
-    fail_op
-fi 
+case "$1" in
+    "-d")
+        dlib;;
+    "-s")
+        slib;;
+    "-build")
+        build;;
+    "-clean")
+        clean;;
+    *)
+        fail_op;;
+esac
