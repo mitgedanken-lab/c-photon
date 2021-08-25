@@ -1,5 +1,24 @@
 #include <photon.h>
 
+vec2 vec2_rand()
+{
+    vec2 p = {randf_signed(), randf_signed()};
+    return p;
+}
+
+vec3 vec3_rand()
+{
+    vec3 p = {randf_signed(), randf_signed(), randf_signed()};
+    return p;
+}
+
+vec2 vec2_reflect(vec2 v, vec2 n)
+{
+    float f = 2.0 * _vec2_dot(v, n);
+    vec2 ret = {v.x - n.x * f, v.y - n.y * f};
+    return ret;
+}
+
 vec3 vec3_reflect(vec3 v, vec3 n)
 {
     float f = 2.0 * _vec3_dot(v, n);
