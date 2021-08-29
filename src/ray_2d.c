@@ -14,6 +14,6 @@ Hit2D hit2D_new(float t, vec2 normal)
 
 vec2 ray2D_at(const Ray2D* restrict ray, float t) 
 { 
-    vec2 v = {ray->orig.x + ray->dir.x * t, ray->orig.y + ray->dir.y * t};
-    return v;
+    vec2 p = {ray->orig.x + ray->dir.x * t, ray->orig.y + ray->dir.y * t};
+    return p;
 }
