@@ -1,6 +1,5 @@
 #include <photon.h>
 #include <stdlib.h>
-#include <float.h>
 
 Tri2D tri2D_new(vec2 a, vec2 b, vec2 c)
 {
@@ -90,9 +89,39 @@ bool tri2D_hit(const Tri2D* restrict tri, const Ray2D* restrict ray, Hit2D* outH
 
 bool tri2D_hit_range(const Tri2D* restrict tri, const Ray2D* restrict ray, Hit2D* outHit, float max)
 {
-    vec2 p;
-    if (line2D_intersect(tri->a, tri->b, ray->orig, ray2D_at(ray, max), &p)) return true;
-    if (line2D_intersect(tri->a, tri->c, ray->orig, ray2D_at(ray, max), &p)) return true;
-    if (line2D_intersect(tri->b, tri->c, ray->orig, ray2D_at(ray, max), &p)) return true;
-    return false;
+    bool hit = false;
+    vec2 p, n, v = ray2D_at(ray, BIGF);
+    float sqdist = BIGF;
+
+    if (line2D_intersect(tri->a, tri->b, ray->orig, v, &p)) {
+        float d = vec2_sqdist(ray->orig, p);
+        if (d < sqdist) {
+            sqdist = d;
+            n = vec2_cross(tri->a, tri->b);
+        }
+        hit = true;
+    }
+
+    if (line2D_intersect(tri->a, tri->c, ray->orig, v, &p)) {
+        float d = vec2_sqdist(ray->orig, p);
+        if (d < sqdist) {
+            sqdist = d;
+            n = vec2_cross(tri->a, tri->c);
+        }
+        hit = true;
+    }
+
+    if (line2D_intersect(tri->b, tri->c, ray->orig, v, &p)) {
+        float d = vec2_sqdist(ray->orig, p);
+        if (d < sqdist) {
+            sqdist = d;
+            n = vec2_cross(tri->b, tri->c);
+        }
+        hit = true;
+    }
+    if (!hit || sqdist > max * max) return false;
+
+    outHit->t = sqrtf(sqdist);
+    outHit->normal = vec2_normal(n);
+    return true;
 }
