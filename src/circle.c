@@ -20,12 +20,14 @@ bool circle_point_overlap_offset(Circle circle, vec2 p, vec2 offset)
 
 bool circle_overlap(Circle c1, Circle c2)
 {
-    return vec2_sqdist(c1.pos, c2.pos) <= c1.radius * c1.radius + c2.radius * c2.radius;
+    float r = c1.radius + c2.radius;
+    return vec2_sqdist(c1.pos, c2.pos) <= r * r;
 }
 
 bool circle_overlap_offset(Circle c1, Circle c2, vec2 offset)
 {
     c1.pos.x += offset.x;
     c1.pos.y += offset.y;
-    return vec2_sqdist(c1.pos, c2.pos) <= c1.radius * c1.radius + c2.radius * c2.radius;
+    float r = c1.radius + c2.radius;
+    return vec2_sqdist(c1.pos, c2.pos) <= r * r;
 }
