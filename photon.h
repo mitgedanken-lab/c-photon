@@ -38,6 +38,10 @@ typedef struct Tri3D {
     vec3 a, b, c;
 } Tri3D;
 
+typedef struct Quad2D {
+    vec2 a, b, c, d;
+} Quad2D;
+
 typedef struct Ray2D {
     vec2 orig;
     vec2 dir;
@@ -91,7 +95,11 @@ bool tri2D_overlap_offset(const Tri2D* t1, const Tri2D* t2, vec2 offset);
 bool tri2D_hit(const Tri2D* tri, const Ray2D* ray, Hit2D* outHit);
 bool tri2D_hit_range(const Tri2D* tri, const Ray2D* ray, Hit2D* outHit, float max);
 
+Quad2D quad2D_new(vec2 a, vec2 b, vec2 c, vec2 d);
+Quad2D rect_to_quad(Rect r);
+
 Rect rect_new(float x, float y, float w, float h);
+Rect quad_to_rect(Quad2D q);
 bool rect_point_overlap(Rect r, vec2 p);
 bool rect_point_overlap_offset(Rect r, vec2 p, vec2 offset);
 bool rect_overlap(Rect r1, Rect r2);

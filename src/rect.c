@@ -18,6 +18,16 @@ Rect rect_new(float x, float y, float w, float h)
     return r;
 }
 
+Rect quad_to_rect(Quad2D q) 
+{
+    Rect r;
+    r.w = q.a.x - q.c.x;
+    r.h = q.a.y - q.b.y;
+    r.x = q.a.x - r.w * 0.5;
+    r.y = q.a.y - r.h * 0.5;
+    return r;
+}
+
 bool rect_point_overlap(Rect r, vec2 p)
 {
     r = rect_half(r);
