@@ -38,6 +38,10 @@ typedef struct Tri3D {
     vec3 a, b, c;
 } Tri3D;
 
+typedef struct Hex3D {
+    vec3 dimension, position;
+} Hex3D;
+
 typedef struct Quad2D {
     vec2 a, b, c, d;
 } Quad2D;

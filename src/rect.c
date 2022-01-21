@@ -58,6 +58,8 @@ bool rect_overlap(Rect r1, Rect r2)
 
 bool rect_overlap_offset(Rect r1, Rect r2, vec2 offset)
 {
+    r1 = rect_half(r1);
+    r2 = rect_half(r2);
     r1.x += offset.x;
     r1.y += offset.y;
     return  (r1.x - r1.w < r2.x + r2.w) &&
