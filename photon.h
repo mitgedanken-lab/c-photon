@@ -130,7 +130,7 @@ bool tri3D_hit(const Tri3D* tri, const Ray3D* ray, Hit3D* outHit);
 bool tri3D_hit_range(const Tri3D* tri, const Ray3D* ray, Hit3D* outHit, float tMin, float tMax);
 
 Hex3D hex3D_new(vec3 dimension, vec3 position);
-bool hex3D_overlap(Hex3D* a, Hex3D* b);
+bool hex3D_overlap(Hex3D a, Hex3D b);
 
 Hit3D hit3D_new(float t, vec3 normal);
 Ray3D ray3D_new(vec3 orig, vec3 dir);
