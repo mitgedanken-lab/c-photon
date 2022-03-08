@@ -5,13 +5,11 @@
 extern "C" {
 #endif
 
-/*
-=================================================
+/*===============================================
 >>>>>>>>>>>>>>  PHOTON PHYSICS    >>>>>>>>>>>>>>>
 Ray casting and primitive shapes for graphics and
 physics calculations.
-=======================================  @eulogic
-*/
+=========================== Eugenio Arteaga A. */
 
 #include <stdbool.h>
 #include <fract.h>
