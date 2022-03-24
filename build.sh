@@ -45,8 +45,23 @@ build() {
     pushd fract/ && ./build.sh -s && popd && mv fract/libfract.a lib/libfract.a
 }
 
+cleand() {
+    if [ -d $1 ]; then
+        rm -r $1 && echo "deleted '$1'"
+    fi
+}
+
+cleanf() {
+    if [ -f $1 ]; then
+        rm $1 && echo "deleted '$1'"  
+    fi
+}
+
 clean() {
-    rm -r lib/
+    cleand lib
+    cleanf $name.so
+    cleanf $name.dylib
+    cleanf $name.a
 }
 
 dlib() {

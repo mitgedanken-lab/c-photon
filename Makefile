@@ -41,5 +41,5 @@ $(LPATHS): $(LDIR) $(LSTATIC)
 shared: $(SRC) $(LPATHS)
 	$(CC) -o $(LIB) $(SRC) $(CFLAGS) $(LFLAGS) $(OSFLAGS)
 
-clean:
-	rm -r $(LDIR)
+clean: build.sh
+	./$^ -$@
