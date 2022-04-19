@@ -13,48 +13,39 @@ flags=(
 
 inc=(
     -I.
-    -Iinclude/
+    -Iinclude
 )
 
 lib=(
-    -Llib/
+    -Llib
     -lfract
 )
 
-fail_op() {
-    echo "Run with -d to build dynamically, or -s to build statically."
-    exit
-}
-
-fail_os() {
-    echo "OS is not supported yet..."
-    exit
-}
-
-mac_dlib() {
-    $cc ${flags[*]} ${inc[*]} ${lib[*]} -dynamiclib $src -o $name.dylib &&\
-    install_name_tool -id @executable_path/$name.dylib $name.dylib 
-}
-
-linux_dlib() {
-    $cc -shared ${flags[*]} ${inc[*]} ${lib[*]} -lm -fPIC $src -o $name.so 
-}
-
 build() {
-    mkdir lib/
-    pushd fract/ && ./build.sh -s && popd && mv fract/libfract.a lib/libfract.a
+    [ ! -d lib ] && mkdir lib
+    pushd fract/ && ./build.sh static && popd && mv fract/libfract.a lib/libfract.a
+}
+
+shared() {
+    if echo "$OSTYPE" | grep -q "darwin"; then
+        $cc ${flags[*]} ${inc[*]} ${lib[*]} -dynamiclib $src -o $name.dylib
+    elif echo "$OSTYPE" | grep -q "linux"; then
+        $cc -shared ${flags[*]} ${inc[*]} ${lib[*]} -lm -fPIC $src -o $name.so 
+    else
+        echo "This OS is not supported yet..." && exit
+    fi
+}
+
+static() {
+    $cc ${flags[*]} ${inc[*]} -c $src && ar -cr $name.a *.o && rm *.o
 }
 
 cleand() {
-    if [ -d $1 ]; then
-        rm -r $1 && echo "deleted '$1'"
-    fi
+    [ -d $1 ] && rm -r $1 && echo "deleted $1"
 }
 
 cleanf() {
-    if [ -f $1 ]; then
-        rm $1 && echo "deleted '$1'"  
-    fi
+    [ -f $1 ] && rm $1 && echo "deleted $1"
 }
 
 clean() {
@@ -62,31 +53,50 @@ clean() {
     cleanf $name.so
     cleanf $name.dylib
     cleanf $name.a
+    return 0
 }
 
-dlib() {
-    if echo "$OSTYPE" | grep -q "darwin"; then
-        mac_dlib
-    elif echo "$OSTYPE" | grep -q "linux"; then
-        linux_dlib
-    else
-        fails_os
-    fi
+install() {
+    [ "$EUID" -ne 0 ] && echo "Run with sudo to install." && exit
+
+    build && shared && static
+    cp photon.h /usr/local/include/
+
+    [ -f $name.a ] && mv $name.a /usr/local/lib/
+    [ -f $name.so ] && mv $name.so /usr/local/lib/
+    [ -f $name.dylib ] && mv $name.dylib /usr/local/lib/
+
+    echo "Successfully installed $name."
+    return 0
 }
 
-slib() {
-    $cc ${flags[*]} ${inc[*]} -c $src && ar -crv $name.a *.o && rm *.o
+uninstall() {
+    [ "$EUID" -ne 0 ] && echo "Run with sudo to uninstall." && exit
+
+    cleanf /usr/local/include/photon.h
+    cleanf /usr/local/lib/$name.a
+    cleanf /usr/local/lib/$name.so
+    cleanf /usr/local/lib/$name.dylib
+
+    echo "Successfully uninstalled $name."
+    return 0
 }
 
 case "$1" in
-    "-d")
-        build && dlib;;
-    "-s")
-        slib;;
-    "-build")
+    "shared")
+        build && shared;;
+    "static")
+        static;;
+    "build")
         build;;
-    "-clean")
+    "install")
+        install;;
+    "uninstall")
+        uninstall;;
+    "clean")
         clean;;
     *)
-        fail_op;;
+        echo "Run with 'shared' ot 'static' to build."
+        echo "Use 'install' to build and install in /usr/local."
+        echo "Use 'clean' to remove local builds.";;
 esac

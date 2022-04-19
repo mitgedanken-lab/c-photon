@@ -3,10 +3,12 @@
 STD=-std=c99
 WFLAGS=-Wall -Wextra
 OPT=-O2
-IDIR=-I. -Iinclude/
+IDIR=-I. -Iinclude
 CC=gcc
 NAME=libphoton
 SRC=src/*.c
+
+SCRIPT=build.sh
 
 LDIR=lib
 LIBS=fract
@@ -16,8 +18,8 @@ LFLAGS=$(patsubst %,-L%,$(LDIR))
 LFLAGS += $(patsubst %,-l%,$(LIBS))
 
 CFLAGS=$(STD) $(WFLAGS) $(OPT) $(IDIR)
-OS=$(shell uname -s)
 
+OS=$(shell uname -s)
 ifeq ($(OS),Darwin)
 	OSFLAGS=-dynamiclib
 	LIB=$(NAME).dylib
@@ -27,10 +29,10 @@ else
 endif
 
 static: $(SRC)
-	$(CC) $(CFLAGS) -c $(SRC) && ar -crv $(NAME).a *.o && rm *.o
+	$(CC) $(CFLAGS) -c $(SRC) && ar -cr $(NAME).a *.o && rm *.o
 
-$(LDIR): 
-	mkdir $(LDIR)
+$(LDIR):
+	@[ -d $@ ] || &&  mkdir $@ && echo "mkdir $@"
 
 $(LDIR)%.a: %
 	cd $^ && make && mv $@ ../
@@ -41,5 +43,12 @@ $(LPATHS): $(LDIR) $(LSTATIC)
 shared: $(SRC) $(LPATHS)
 	$(CC) -o $(LIB) $(SRC) $(CFLAGS) $(LFLAGS) $(OSFLAGS)
 
-clean: build.sh
-	./$^ -$@
+clean: $(SCRIPT)
+	./$^ $@
+
+install: $(SCRIPT)
+	./$^ $@
+
+uninstall: $(SCRIPT)
+	./$^ $@
+
