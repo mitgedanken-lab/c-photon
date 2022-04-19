@@ -32,7 +32,7 @@ static: $(SRC)
 	$(CC) $(CFLAGS) -c $(SRC) && ar -cr $(NAME).a *.o && rm *.o
 
 $(LDIR):
-	@[ -d $@ ] || &&  mkdir $@ && echo "mkdir $@"
+	@[ -d $@ ] || mkdir $@ && echo "mkdir $@"
 
 $(LDIR)%.a: %
 	cd $^ && make && mv $@ ../

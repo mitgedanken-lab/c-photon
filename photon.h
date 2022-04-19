@@ -12,6 +12,7 @@ physics calculations.
 =========================== Eugenio Arteaga A. */
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <fract.h>
 
 typedef struct Rect {
@@ -63,6 +64,11 @@ typedef struct Hit3D {
     float t;
     vec3 normal;
 } Hit3D;
+
+typedef struct Box3D {
+    vec3 min;
+    vec3 max;
+} Box3D;
 
 #define _ray3D_at(ray, t) {ray->orig.x + ray->dir.x * t, ray->orig.y + ray->dir.y * t, ray->orig.z + ray->dir.z * t}
 #define _ray2D_at(ray, t) {ray->orig.x + ray->dir.x * t, ray->orig.y + ray->dir.y * t}
@@ -133,6 +139,10 @@ bool hex3D_overlap(Hex3D a, Hex3D b);
 Hit3D hit3D_new(float t, vec3 normal);
 Ray3D ray3D_new(vec3 orig, vec3 dir);
 vec3 ray3D_at(const Ray3D* ray, float t);
+
+Box3D box3D_new(const vec3 min, const vec3 max);
+Box3D box3D_from_mesh(const vec3* v, const size_t count);
+bool box3D_hit(const Box3D* box, const Ray3D* ray, Hit3D* outHit);
 
 #ifdef __cplusplus
 }
