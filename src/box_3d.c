@@ -80,25 +80,23 @@ bool box3D_hit(const Box3D* restrict box, const Ray3D* restrict ray, Hit3D* rest
     }
  
     outHit->t = tmin;
-    vec3 p = ray3D_at(ray, tmin);
-    vec3 center = vec3_lerp(box->min, box->max, 0.5);
-    vec3 diff = vec3_sub(center, p);
-    vec3 abs = {absf(diff.x), absf(diff.y), absf(diff.z)};
-
-    outHit->normal = vec3_new(signf(diff.x), 0.0, 0.0);
-    float f = abs.x;
     
-    if (abs.y > f) {
-        outHit->normal.x = 0.0;
-        outHit->normal.z = 0.0;
-        outHit->normal.y = signf(diff.y);
-        f = abs.y;
-    }
-    if (abs.z > f) {
-        outHit->normal.x = 0.0;
-        outHit->normal.y = 0.0;
-        outHit->normal.z = signf(diff.z);
-        f = abs.z;
+    vec3 p = ray3D_at(ray, tmin);
+    vec3 min = vec3_sub(p, box->min);
+    vec3 max = vec3_sub(p, box->max);
+
+    vec3 d = {
+        absf(min.x) < absf(max.x) ? -absf(min.x) : absf(max.x),
+        absf(min.y) < absf(max.y) ? -absf(min.y) : absf(max.y),
+        absf(min.z) < absf(max.z) ? -absf(min.z) : absf(max.z)
+    };
+
+    if (absf(d.x) < absf(d.y) && absf(d.x) < absf(d.z)) {
+        outHit->normal = vec3_new(signf(d.x), 0.0, 0.0);
+    } else if (absf(d.y) < absf(d.x) && absf(d.y) < absf(d.z)) {
+        outHit->normal = vec3_new(0.0, signf(d.y), 0.0);
+    } else {
+        outHit->normal = vec3_new(0.0, 0.0, signf(d.z));
     }
 
     return true; 
