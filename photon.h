@@ -96,6 +96,7 @@ bool circle_overlap(Circle c1, Circle c2);
 bool circle_overlap_offset(Circle c1, Circle c2, vec2 offset);
 
 Tri2D tri2D_new(vec2 a, vec2 b, vec2 c);
+vec3 tri2D_barycenter(const Tri2D* tri, const vec2 p);
 bool tri2D_point_overlap(const Tri2D* tri, vec2 p);
 bool tri2D_point_overlap_offset(const Tri2D* tri, vec2 p, vec2 offset);
 bool tri2D_overlap(const Tri2D* t1, const Tri2D* t2);
