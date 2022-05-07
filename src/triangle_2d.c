@@ -7,6 +7,16 @@ Tri2D tri2D_new(vec2 a, vec2 b, vec2 c)
     return tri;
 }
 
+vec3 tri2D_barycenter(const Tri2D* tri, const vec2 p)
+{
+    vec3 w;
+    const float d = (tri->b.y - tri->c.y) * (tri->a.x - tri->c.x) + (tri->c.x - tri->b.x) * (tri->a.y - tri->c.y);
+    w.x = ((tri->b.y - tri->c.y) * (p.x - tri->c.x) + (tri->c.x - tri->b.x) * (p.y - tri->c.y)) / d;
+    w.y = ((tri->c.y - tri->a.y) * (p.x - tri->c.x) + (tri->a.x - tri->c.x) * (p.y - tri->c.y)) / d;
+    w.z = 1.0 - w.x - w.y;
+    return w;
+}
+
 bool tri2D_point_overlap(const Tri2D* restrict tri, vec2 p)
 {
     float x = p.x - tri->a.x;
