@@ -70,15 +70,15 @@ typedef struct Box3D {
     vec3 max;
 } Box3D;
 
-#define _ray3D_at(ray, t) {ray->orig.x + ray->dir.x * t, ray->orig.y + ray->dir.y * t, ray->orig.z + ray->dir.z * t}
-#define _ray2D_at(ray, t) {ray->orig.x + ray->dir.x * t, ray->orig.y + ray->dir.y * t}
+#define _ray3D_at(ray, t) ((vec3){ray->orig.x + ray->dir.x * t, ray->orig.y + ray->dir.y * t, ray->orig.z + ray->dir.z * t})
+#define _ray2D_at(ray, t) ((vec2){ray->orig.x + ray->dir.x * t, ray->orig.y + ray->dir.y * t})
 
 /*******************
  -> Vec Extension <- 
 *******************/
 
-vec2 vec2_rand();
-vec3 vec3_rand();
+vec2 vec2_rand(void);
+vec3 vec3_rand(void);
 vec2 vec2_reflect(vec2 v, vec2 n);
 vec3 vec3_reflect(vec3 v, vec3 n);
 bool vec3_refract(vec3 v, vec3 n, float nint, vec3* outRefracted);
@@ -132,6 +132,7 @@ bool sphere_overlap_offset(Sphere s1, Sphere s2, vec3 offset);
 Tri3D tri3D_new(vec3 a, vec3 b, vec3 c);
 vec3 tri3D_norm(const Tri3D* tri);
 bool tri3D_hit(const Tri3D* tri, const Ray3D* ray, Hit3D* outHit);
+bool tri3D_hit_fast(const Tri3D* tri, const Ray3D* ray, Hit3D* outHit, const float closest);
 bool tri3D_hit_range(const Tri3D* tri, const Ray3D* ray, Hit3D* outHit, float tMin, float tMax);
 
 Hex3D hex3D_new(vec3 dimension, vec3 position);
@@ -142,8 +143,12 @@ Ray3D ray3D_new(vec3 orig, vec3 dir);
 vec3 ray3D_at(const Ray3D* ray, float t);
 
 Box3D box3D_new(const vec3 min, const vec3 max);
+Box3D box3D_move(const Box3D box, const vec3 v);
+Box3D box3D_from_triangle(const Tri3D* t);
 Box3D box3D_from_mesh(const vec3* v, const size_t count);
+bool box3D_overlap(const Box3D a, const Box3D b);
 bool box3D_hit(const Box3D* box, const Ray3D* ray, Hit3D* outHit);
+bool box3D_hit_fast(const Box3D* box, const Ray3D* ray, float* tOut);
 
 #ifdef __cplusplus
 }

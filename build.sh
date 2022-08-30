@@ -21,6 +21,10 @@ lib=(
     -lfract
 )
 
+exe() {
+    echo "$@" && $@
+}
+
 build() {
     [ ! -d lib ] && mkdir lib
     pushd fract/ && ./build.sh static && popd && mv fract/libfract.a lib/libfract.a
@@ -28,16 +32,16 @@ build() {
 
 shared() {
     if echo "$OSTYPE" | grep -q "darwin"; then
-        $cc ${flags[*]} ${inc[*]} ${lib[*]} -dynamiclib $src -o $name.dylib
+        exe $cc ${flags[*]} ${inc[*]} ${lib[*]} -dynamiclib $src -o $name.dylib
     elif echo "$OSTYPE" | grep -q "linux"; then
-        $cc -shared ${flags[*]} ${inc[*]} ${lib[*]} -lm -fPIC $src -o $name.so 
+        exe $cc -shared ${flags[*]} ${inc[*]} ${lib[*]} -lm -fPIC $src -o $name.so
     else
         echo "This OS is not supported yet..." && exit
     fi
 }
 
 static() {
-    $cc ${flags[*]} ${inc[*]} -c $src && ar -cr $name.a *.o && rm *.o
+    exe $cc ${flags[*]} ${inc[*]} -c $src && ar -cr $name.a *.o && rm *.o
 }
 
 cleand() {

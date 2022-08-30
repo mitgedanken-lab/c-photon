@@ -23,22 +23,56 @@ bool tri3D_hit(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outH
 {
     vec3 e1 = _vec3_sub(tri->b, tri->a);
     vec3 e2 = _vec3_sub(tri->c, tri->a);
-    vec3 c = _vec3_cross(e1, e2);
-    vec3 n = _vec3_normal(c);
 
     vec3 h = _vec3_cross(ray->dir, e2);
     float a = _vec3_dot(e1, h);
-    if (a > -EPSILON && a < EPSILON) return false; // parallel
+    if (a > -EPSILON && a < EPSILON) {
+        return false; // parallel
+    }
     
     float f = 1.0 / a;
     vec3 s = _vec3_sub(ray->orig, tri->a);
     float u = f * _vec3_dot(s, h);
     vec3 q = _vec3_cross(s, e1);
     float v = f * _vec3_dot(ray->dir, q);
-    if ((u < 0.0 ) | (u > 1.0) | (v < 0.0) | (u + v > 1.0)) return false;
+    if ((u < 0.0 ) || (u > 1.0) || (v < 0.0) || (u + v > 1.0)) {
+        return false;
+    }
 
     float t = f * _vec3_dot(e2, q);
     if (t > EPSILON) {
+        vec3 c = _vec3_cross(e1, e2);
+        vec3 n = _vec3_normal(c);
+        *outHit = hit3D_new(t, n);
+        return true; // Hit!
+    }
+    return false;
+}
+
+bool tri3D_hit_fast(const Tri3D* restrict tri, const Ray3D* restrict ray, Hit3D* outHit, const float closest)
+{
+    vec3 e1 = _vec3_sub(tri->b, tri->a);
+    vec3 e2 = _vec3_sub(tri->c, tri->a);
+
+    vec3 h = _vec3_cross(ray->dir, e2);
+    float a = _vec3_dot(e1, h);
+    if (a > -EPSILON && a < EPSILON) {
+        return false; // parallel
+    }
+    
+    float f = 1.0 / a;
+    vec3 s = _vec3_sub(ray->orig, tri->a);
+    float u = f * _vec3_dot(s, h);
+    vec3 q = _vec3_cross(s, e1);
+    float v = f * _vec3_dot(ray->dir, q);
+    if ((u < 0.0 ) || (u > 1.0) || (v < 0.0) || (u + v > 1.0)) {
+        return false;
+    }
+
+    float t = f * _vec3_dot(e2, q);
+    if (t > EPSILON && t < closest) {
+        vec3 c = _vec3_cross(e1, e2);
+        vec3 n = _vec3_normal(c);
         *outHit = hit3D_new(t, n);
         return true; // Hit!
     }
