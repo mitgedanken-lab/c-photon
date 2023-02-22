@@ -1,6 +1,6 @@
 # photon makefile
 
-NAME = libmass
+NAME = libphoton
 
 CC = gcc
 STD = -std=c99
