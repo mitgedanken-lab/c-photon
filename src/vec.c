@@ -2,12 +2,12 @@
 
 vec2 vec2_rand(void)
 {
-    return (vec2){randf_signed(), randf_signed()};
+    return (vec2){frand_signed(), frand_signed()};
 }
 
 vec3 vec3_rand(void)
 {
-    return (vec3){randf_signed(), randf_signed(), randf_signed()};
+    return (vec3){frand_signed(), frand_signed(), frand_signed()};
 }
 
 vec2 vec2_reflect(const vec2 v, const vec2 n)
