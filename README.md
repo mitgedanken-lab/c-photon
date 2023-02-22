@@ -1,8 +1,8 @@
 # photon
 
-> Rays and geometries for graphics and physics in 2D and 3D.
+> Rays and geometries in C for graphics and physics.
 > Various implementations of ray casting and intersections algorithms between
-> different primitives.
+> different primitives in 2D and 3D.
 
 * 2D and 3D Ray Casting
 * 2D and 3D Triangle Implementations
@@ -34,7 +34,7 @@ int main(void)
         printf("Ray did not hit triangle\n");
     }
     
-    return 0;
+    /* ... */
 }
 
 ```
