@@ -10,7 +10,6 @@
 
 > The complete API can be found in the single header of the library, photon.h.
 
-```
 ## Example
 
 ```C
