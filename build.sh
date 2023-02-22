@@ -91,7 +91,7 @@ install() {
     [ "$EUID" -ne 0 ] && echo "Run with sudo to install" && exit
     
     make all -j # or shared && static
-    cmd cp mass.h /usr/local/include/
+    cmd cp photon.h /usr/local/include/
 
     [ -f bin/$name.a ] && cmd mv bin/$name.a /usr/local/lib
     [ -f bin/$name.so ] && cmd mv bin/$name.so /usr/local/lib
@@ -104,7 +104,7 @@ install() {
 uninstall() {
     [ "$EUID" -ne 0 ] && echo "Run with sudo to uninstall" && exit
 
-    cleanf /usr/local/include/mass.h
+    cleanf /usr/local/include/photon.h
     cleanf /usr/local/lib/$name.a
     cleanf /usr/local/lib/$name.so
     cleanf /usr/local/lib/$name.dylib
